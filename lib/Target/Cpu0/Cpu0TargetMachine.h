@@ -29,6 +29,8 @@ public:
                     StringRef FS, const TargetOptions &Options,
                     Optional<Reloc::Model> RM, CodeModel::Model CM,
                     CodeGenOpt::Level OL, bool isLittle);
+
+  TargetPassConfig *createPassConfig(PassManagerBase &PM) override;
 };
 
 class Cpu0ebTargetMachine : public Cpu0TargetMachine {

@@ -11,6 +11,7 @@
 //===----------------------------------------------------------------------===//
 
 #include "Cpu0TargetMachine.h"
+#include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/Support/TargetRegistry.h"
 using namespace llvm;
 
@@ -40,4 +41,25 @@ Cpu0TargetMachine::Cpu0TargetMachine(const Target &T, const Triple &TT,
                                      CodeModel::Model CM, CodeGenOpt::Level OL,
                                      bool isLittle)
     : LLVMTargetMachine(T, computeDataLayout(TT), TT, CPU, FS, Options,
-                        getEffectiveRelocModel(RM), CM, OL) {}
+                        getEffectiveRelocModel(RM), CM, OL)
+{
+  initAsmInfo();
+}
+
+TargetPassConfig *Cpu0TargetMachine::createPassConfig(PassManagerBase &PM) {
+  struct Cpu0PassConfig : public TargetPassConfig {
+    Cpu0PassConfig(Cpu0TargetMachine *TM, PassManagerBase &PM)
+      : TargetPassConfig(TM, PM) { }
+
+    Cpu0TargetMachine &getCpu0TargetMachine() const {
+      return getTM<Cpu0TargetMachine>();
+    }
+
+    bool addInstSelector() override {
+      // FIXME : Add instruction selector.
+      return false;
+    }
+  };
+
+  return new Cpu0PassConfig(this, PM);
+}
