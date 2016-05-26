@@ -27,12 +27,17 @@ static std::string computeDataLayout(const Triple &TT) {
   return ss.str();
 }
 
+static Reloc::Model getEffectiveRelocModel(Optional<Reloc::Model> RM) {
+  if (!RM.hasValue())
+    return Reloc::Static;
+  return *RM;
+}
+
 Cpu0TargetMachine::Cpu0TargetMachine(const Target &T, const Triple &TT,
                                      StringRef CPU, StringRef FS,
                                      const TargetOptions &Options,
-                                     Reloc::Model RM, CodeModel::Model CM,
-                                     CodeGenOpt::Level OL, bool isLittle)
-    : LLVMTargetMachine(T, computeDataLayout(TT), TT, CPU, FS, Options, RM, CM,
-                        OL)
-{
-}
+                                     Optional<Reloc::Model> RM,
+                                     CodeModel::Model CM, CodeGenOpt::Level OL,
+                                     bool isLittle)
+    : LLVMTargetMachine(T, computeDataLayout(TT), TT, CPU, FS, Options,
+                        getEffectiveRelocModel(RM), CM, OL) {}
