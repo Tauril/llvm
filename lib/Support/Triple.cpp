@@ -64,6 +64,8 @@ const char *Triple::getArchTypeName(ArchType Kind) {
   case shave:       return "shave";
   case wasm32:      return "wasm32";
   case wasm64:      return "wasm64";
+  case cpu0:        return "cpu0";
+  case cpu0el:      return "cpu0el";
   }
 
   llvm_unreachable("Invalid ArchType!");
@@ -131,6 +133,8 @@ const char *Triple::getArchTypePrefix(ArchType Kind) {
   case shave:       return "shave";
   case wasm32:
   case wasm64:      return "wasm";
+  case cpu0:
+  case cpu0el:      return "cpu0";
   }
 }
 
@@ -277,6 +281,8 @@ Triple::ArchType Triple::getArchTypeForLLVMName(StringRef Name) {
     .Case("shave", shave)
     .Case("wasm32", wasm32)
     .Case("wasm64", wasm64)
+    .Case("cpu0", cpu0)
+    .Case("cpu0el", cpu0el)
     .Default(UnknownArch);
 }
 
@@ -386,6 +392,8 @@ static Triple::ArchType parseArch(StringRef ArchName) {
     .Case("shave", Triple::shave)
     .Case("wasm32", Triple::wasm32)
     .Case("wasm64", Triple::wasm64)
+    .Cases("cpu0", "cpu0eb", "cpu0allegrex", Triple::cpu0)
+    .Cases("cpu0el", "cpu0allegrex", Triple::cpu0el)
     .Default(Triple::UnknownArch);
 
   // Some architectures require special parsing logic just to compute the
@@ -600,6 +608,8 @@ static Triple::ObjectFormatType getDefaultFormat(const Triple &T) {
   case Triple::wasm32:
   case Triple::wasm64:
   case Triple::xcore:
+  case Triple::cpu0:
+  case Triple::cpu0el:
     return Triple::ELF;
 
   case Triple::ppc:
@@ -1129,6 +1139,8 @@ static unsigned getArchPointerBitWidth(llvm::Triple::ArchType Arch) {
   case llvm::Triple::lanai:
   case llvm::Triple::shave:
   case llvm::Triple::wasm32:
+  case llvm::Triple::cpu0:
+  case llvm::Triple::cpu0el:
     return 32;
 
   case llvm::Triple::aarch64:
@@ -1203,6 +1215,8 @@ Triple Triple::get32BitArchVariant() const {
   case Triple::lanai:
   case Triple::shave:
   case Triple::wasm32:
+  case Triple::cpu0:
+  case Triple::cpu0el:
     // Already 32-bit.
     break;
 
@@ -1237,6 +1251,8 @@ Triple Triple::get64BitArchVariant() const {
   case Triple::xcore:
   case Triple::sparcel:
   case Triple::shave:
+  case Triple::cpu0:
+  case Triple::cpu0el:
     T.setArch(UnknownArch);
     break;
 
@@ -1327,6 +1343,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::systemz:
   case Triple::tce:
   case Triple::thumbeb:
+  case Triple::cpu0:
     // Already big endian.
     break;
 
@@ -1336,6 +1353,7 @@ Triple Triple::getBigEndianArchVariant() const {
   case Triple::mipsel:  T.setArch(Triple::mips);       break;
   case Triple::ppc64le: T.setArch(Triple::ppc64);      break;
   case Triple::sparcel: T.setArch(Triple::sparc);      break;
+  case Triple::cpu0el:  T.setArch(Triple::cpu0);      break;
   }
   return T;
 }
@@ -1387,6 +1405,7 @@ Triple Triple::getLittleEndianArchVariant() const {
   case Triple::x86:
   case Triple::x86_64:
   case Triple::xcore:
+  case Triple::cpu0el:
     // Already little endian.
     break;
 
@@ -1396,6 +1415,7 @@ Triple Triple::getLittleEndianArchVariant() const {
   case Triple::mips:       T.setArch(Triple::mipsel);   break;
   case Triple::ppc64:      T.setArch(Triple::ppc64le);  break;
   case Triple::sparc:      T.setArch(Triple::sparcel);  break;
+  case Triple::cpu0:       T.setArch(Triple::cpu0el);  break;
   }
   return T;
 }

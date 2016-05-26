@@ -226,9 +226,10 @@ set(LLVM_ALL_TARGETS
   AMDGPU
   ARM
   BPF
+  Cpu0
   Hexagon
-  Mips
   MSP430
+  Mips
   NVPTX
   PowerPC
   Sparc

@@ -320,6 +320,8 @@ enum {
   // an official value for Lanai. As soon as one is allocated, this enum will be
   // updated to use it.
   EM_LANAI         = 0x8123, // Lanai 32-bit processor
+
+  EM_CPU0          = 999, // Cpu0 tutorial.
 };
 
 // Object file classes.
@@ -612,6 +614,19 @@ enum {
 // ELF Relocation types for WebAssembly
 enum {
 #include "ELFRelocs/WebAssembly.def"
+};
+
+// Cpu0 Specific e_flags
+enum {
+  EF_CPU0_NOREORDER = 0x00000001, // Don't reorder instructions
+  EF_CPU0_PIC       = 0x00000002, // Position independent code
+  EF_CPU0_ARCH_32   = 0x50000000, // CPU032 instruction set per linux not elf.h
+  EF_CPU0_ARCH      = 0xf0000000  // Mask for applying EF_CPU0_ARCH_ variant
+};
+
+// ELF Relocation types for Cpu0
+enum {
+#include "ELFRelocs/Cpu0.def"
 };
 
 #undef ELF_RELOC
